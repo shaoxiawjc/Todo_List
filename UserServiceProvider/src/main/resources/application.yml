@@ -1,0 +1,34 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: user-service-provider
+  datasource:
+    username: root
+    password: 1234567
+    url: jdbc:mysql://localhost:3306/todo?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package: com.shaoxia.model.pojo
+  # 驼峰转发开启
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+
+
+dubbo:
+  application:
+    name: user-service-provider
+  registry:
+    id: nacos-registry
+    address: nacos://127.0.0.1:8848
+  protocol:
+    name: dubbo
+    port: -1
+server:
+  port: 8300
+ratelimiter:
+  redis-address: 127.0.0.1
+  redis-port: 6379

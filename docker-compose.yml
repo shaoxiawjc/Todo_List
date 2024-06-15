@@ -1,0 +1,84 @@
+networks:
+  todo_net:
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234567
+    ports:
+      - "3306:3306"
+    networks:
+      - todo_net
+    volumes:
+      - ./docs/sql/:/docker-entrypoint-initdb.d/
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  nacos:
+    image: nacos/nacos-server:latest
+    environment:
+      MODE: standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: nacos
+      MYSQL_SERVICE_PASSWORD: nacos
+    networks:
+      - todo_net
+    ports:
+      - "8848:8848"
+    depends_on:
+      - mysql
+
+  user-service:
+    image: user-service:1.0
+    networks:
+      - todo_net
+    ports:
+      - "8300:8300"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/todo
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      NACOS_SERVER_ADDR: nacos:8848
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+
+  todo-service:
+    image: todo-service:1.0
+    networks:
+      - todo_net
+    ports:
+      - "8301:8301"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/todo
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      NACOS_SERVER_ADDR: nacos:8848
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - user-service
+
+volumes:
+  mysql_data:
+  redis_data:
+  nexus-data:
+
+
+
+

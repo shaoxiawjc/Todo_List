@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaoxia.todo.mapper.TodoMapper">
+
+
+    <insert id="insertOneTodo" useGeneratedKeys="true" keyProperty="id">
+        insert into `todo` (uid, title, content, is_completed)
+        VALUES (#{uid},#{title},#{content},#{isCompleted})
+    </insert>
+
+    <update id="update">
+        update todo
+        set
+            title = #{title},
+            content = #{content},
+            is_completed = #{isCompleted}
+        where id = #{id} and uid = #{uid}
+    </update>
+    <update id="completeOneTodo">
+        update todo
+        set
+            is_completed = 1
+        where id = #{id}
+    </update>
+    <delete id="completeBatchTodo">
+        update todo set is_completed = 1 where uid = #{uid} and id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="delOneTodo">
+        update todo set deleted = 1 where id = #{id} and uid = #{uid}
+    </delete>
+    <delete id="delBatchTodo">
+        update todo set deleted = 1 where uid =  #{uid} and id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectTodoIdsByIsCompleted" resultType="java.lang.Integer">
+        SELECT id
+        FROM todo
+        WHERE is_completed = #{isCompletedStatus} and uid = #{uid} and deleted = 0
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectTodosByIds" resultType="com.shaoxia.model.pojo.Todo">
+        SELECT *
+        FROM todo
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectAllTodoIds" resultType="java.lang.Integer">
+        SELECT id
+        FROM todo
+        WHERE  uid = #{uid} and deleted = 0
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="selectIdsByTitleLike" resultType="java.lang.Integer">
+        SELECT id
+        FROM todo
+        WHERE  uid = #{uid} and deleted = 0 and title like concat('%',#{name},'%')
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="selectIdsByTitleLikeAndIsCompleted" resultType="java.lang.Integer">
+        SELECT id
+        FROM todo
+        WHERE  uid = #{uid} and deleted = 0 and title like concat('%',#{name},'%') and is_completed = #{status}
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+
+</mapper>

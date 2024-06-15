@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shaoxia.user.mapper.UserMapper">
+
+    <select id="selectUserByName" resultType="com.shaoxia.model.pojo.User">
+        select id,name,password,created_time,updated_time,deleted
+        from user
+        where name = #{name} and deleted = 0
+    </select>
+    <select id="selectUserById" resultType="com.shaoxia.model.pojo.User">
+        select id,name,password,created_time,updated_time,deleted
+        from user
+        where id = #{id} and deleted = 0
+    </select>
+
+    <insert id="addUser" useGeneratedKeys="true">
+        insert into user(name,password) value (#{name},#{password})
+    </insert>
+
+</mapper>
