@@ -28,6 +28,7 @@ import java.util.Objects;
  */
 @RestController
 @CrossOrigin
+@RequestMapping("/todo")
 public class TodoController {
 	@Resource
 	private TodoService todoService;

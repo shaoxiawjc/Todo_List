@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public BaseResponse rateLimitExceptionHandler(RateLimitException e) {
         log.error("businessException: " + e.getMessage(), e);
-        return ResultUtils.error(ErrorCode.SYSTEM_ERROR,e.getMessage());
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR,e.getMessage(),e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)

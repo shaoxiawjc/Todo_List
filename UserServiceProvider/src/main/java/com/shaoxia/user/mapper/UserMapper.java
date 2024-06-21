@@ -1,6 +1,7 @@
 package com.shaoxia.user.mapper;
 
 import com.shaoxia.model.pojo.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
  * @date 2024-05-22 20:24
  */
 @Repository
+@Mapper
 public interface UserMapper {
 	User selectUserByName(@Param("name") String name);
 

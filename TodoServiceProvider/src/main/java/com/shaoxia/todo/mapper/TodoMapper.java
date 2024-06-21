@@ -13,7 +13,6 @@ import java.util.List;
  * @description: TODO
  * @date 2024-05-30 17:06
  */
-@Mapper
 @Repository
 public interface TodoMapper {
 	void insertOneTodo(Todo todo);
